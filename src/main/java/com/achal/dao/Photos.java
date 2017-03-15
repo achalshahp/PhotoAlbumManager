@@ -1,22 +1,26 @@
 
-package com.topjavatutorial.dao;
+package com.achal.dao;
  
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
- 
+
+//Table Definition with the Getters and Setters.
 @Entity
-public class Albums {
+public class Photos {
  
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name = "id")
     private int id;
-    
-    @Column(name = "title")
+    @Column
     private String title;
+    @Column
+    private String url;
+    @Column
+    private int album_id;
+    
     
     public int getId() {
         return id;
@@ -29,6 +33,18 @@ public class Albums {
     }
     public void setTitle(String title) {
         this.title = title;
+    }
+    public String getUrl(){
+    	return url;
+    }
+    public void setUrl(String url){
+    	this.url = url;
+    }
+    public int getAlbumID(){
+    	return album_id;
+    }
+    public void setAlbumID(int album_id){
+    	this.album_id = album_id;
     }
     
 }

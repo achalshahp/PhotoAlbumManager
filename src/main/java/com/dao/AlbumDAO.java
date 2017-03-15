@@ -1,67 +1,71 @@
-package com.topjavatutorial.dao;
+package com.dao;
  
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import javax.json.Json;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.glassfish.jersey.server.JSONP;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
- 
-public class PhotosDAO {
+
+@JsonSerialize
+public class AlbumDAO {
     
-    public void addPhoto(Photos bean){
+	public void addAlbum(Albums bean){
         Session session = SessionUtil.getSession();        
         Transaction tx = session.beginTransaction();
-        addPhoto(session,bean);        
+        addAlbum(session,bean);        
         tx.commit();
         session.close();
         
     }
     
-    private void addPhoto(Session session, Photos bean){
-    	Photos photo = new Photos();
+	private void addAlbum(Session session, Albums bean){
+    	Albums album = new Albums();
         
-        photo.setTitle(bean.getTitle());
-        photo.setUrl(bean.getUrl());
-        photo.setAlbumID(bean.getAlbumID());
-        session.save(photo);
+        album.setTitle(bean.getTitle());
+        session.save(album);
     }
     
-    public List<Photos> getPhotos(){
+	public List<Albums> getAlbums(){
         Session session = SessionUtil.getSession();  
-        Query query = session.createQuery("from Photos");
+        Query query = session.createQuery("from Albums");
         System.out.println(query.list());
-        List<Photos> photos =  query.list();
+        List<Albums> albums =  query.list();
         session.close();
-        return photos;
+        return albums;
     }
     
-    public List<Photos> getPhotosforAlbumID(int id){
-        Session session = SessionUtil.getSession();
-        Transaction tx = session.beginTransaction();
-        String getphotos = "from Photos where album_id = :id";
-        Query query = session.createQuery(getphotos);
-        query.setInteger("id", id);
+    public List<Albums> getAlbumswithPhotos() {
+		// TODO Auto-generated method stub
+		Session session = SessionUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		String albumswithphotos = "from Albums,Photos";
+        Query query = session.createQuery(albumswithphotos);
+        //query.setInteger();
         System.out.println(query.list());
-        List<Photos> photos =  query.list();
+        List<Albums> albums =  query.list();
         tx.commit();
         session.close();
-        return photos;
-    }
+        return albums;
+	}
  
-    public int deletePhoto(int id) {
+    public int deleteAlbum(int id) {
         Session session = SessionUtil.getSession();
         Transaction tx = session.beginTransaction();
-        String hql = "delete from photos where id = :id";
+        String hql = "delete from albums where id = :id";
         Query query = session.createQuery(hql);
         query.setInteger("id",id);
         int rowCount = query.executeUpdate();
@@ -71,17 +75,15 @@ public class PhotosDAO {
         return rowCount;
     }
     
-    public int updatePhotos(int id, Photos photo){
+    public int updateAlbums(int id, Albums album){
          if(id <=0)  
                return 0;  
          Session session = SessionUtil.getSession();
             Transaction tx = session.beginTransaction();
-            String hql = "update photos set title = :title, url = :url, album_id = :album_id where id = :id";
+            String hql = "update albums set title = :title where id = :id";
             Query query = session.createQuery(hql);
             query.setInteger("id",id);
-            query.setString("title",photo.getTitle());
-            query.setString("url",photo.getUrl());
-            query.setInteger("album_id", photo.getAlbumID());
+            query.setString("name",album.getTitle());
             //query.setInteger("age",emp.getAge());
             int rowCount = query.executeUpdate();
             System.out.println("Rows affected: " + rowCount);
@@ -90,15 +92,16 @@ public class PhotosDAO {
             return rowCount;
     }
 
-	public String getPhotosHttp() {
+	public String getAlbumsHttp() throws Exception{
 		// TODO Auto-generated method stub
+		
 		String response1 = null;
 		try {
 			
 
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpGet getRequest = new HttpGet(
-					"http://jsonplaceholder.typicode.com/photos");
+					"http://jsonplaceholder.typicode.com/albums");
 			getRequest.addHeader("accept", "application/json");
 
 			HttpResponse response = httpClient.execute(getRequest);
@@ -112,7 +115,7 @@ public class PhotosDAO {
 					(response.getEntity().getContent())));
 			
 			
-			System.out.println("THE RESPONSE WE GOT IS: \n" + response.getEntity().getContent() );
+			System.out.println("THE RESPONSE WE GOT IS: ]n" + response.getEntity().getContent() );
 			String title = null;
 			
 			System.out.println("Response is :.... \n" + response);
@@ -128,7 +131,6 @@ public class PhotosDAO {
 			//String hql = "insert into Albums (title)";
 			JSONArray jsonArray = new JSONArray(response1);
 			
-			
 			for (int i=0;i<jsonArray.length();i++){
 				JSONObject obj = jsonArray.getJSONObject(i);
 				System.out.println("THE OBJECT IN THIS RUN IS: \n" + obj);
@@ -136,9 +138,7 @@ public class PhotosDAO {
 				System.out.println("THE ID FOUND IS : \n" + id_get);
 				String str_get = obj.getString("title");
 				System.out.println("THE ID FOUND IS : \n" + id_get);
-				String url_get = obj.getString("url");
-				int album_id_get = obj.getInt("albumId");
-				insertIntoDB(id_get,str_get,url_get,album_id_get);
+				insertIntoDB(id_get,str_get);
 			}
 		
 
@@ -162,19 +162,18 @@ public class PhotosDAO {
 
 	}
 	
-	private int insertIntoDB(int id,String title, String url, int album_id)
+	private int insertIntoDB(int id,String title)
 	{
 		Session session = SessionUtil.getSession();
 		Transaction tx = session.beginTransaction();
-		Photos photo = new Photos();
-		photo.setId(id);
-		photo.setTitle(title);
-		photo.setUrl(url);
-		photo.setAlbumID(album_id);
-		Integer ret_id = (Integer) session.save(photo);
+		Albums album = new Albums();
+		album.setId(id);
+		album.setTitle(title);
+		Integer ret_id = (Integer) session.save(album);
         tx.commit();
         session.close();
 		return ret_id;
 		
 	}
+
 }

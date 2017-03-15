@@ -1,5 +1,5 @@
 
-package com.topjavatutorial.dao;
+package com.dao;
  
 import javax.persistence.Column;
 import javax.persistence.Entity;
