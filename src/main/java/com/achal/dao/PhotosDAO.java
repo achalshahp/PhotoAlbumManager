@@ -1,3 +1,7 @@
+/**
+ * @author ashah8
+ *
+ */
 package com.achal.dao;
  
 import java.io.BufferedReader;
@@ -20,21 +24,24 @@ public class PhotosDAO {
     
 	static String photosURL = "http://jsonplaceholder.typicode.com/photos";
 	
-    public void addPhoto(Photos bean){
+    public String addPhoto(Photos bean){
         Session session = SessionUtil.getSession();        
         Transaction tx = session.beginTransaction();
-        addPhoto(session,bean);        
+        String returnVal = addPhoto(session,bean);        
         tx.commit();
         session.close();
+		return returnVal;
         }
     
-    private void addPhoto(Session session, Photos bean){
+    private String addPhoto(Session session, Photos bean){
     	Photos photo = new Photos();
         
         photo.setTitle(bean.getTitle());
         photo.setUrl(bean.getUrl());
         photo.setAlbumID(bean.getAlbumID());
         session.save(photo);
+        String returnVal = "Title is : " + bean.getTitle() + "\n"+ "Url: " + bean.getUrl() +"\n" +  "Albumid : " + bean.getAlbumID();
+        return returnVal;
     }
     
     public List<Photos> getPhotos(){
@@ -65,7 +72,7 @@ public class PhotosDAO {
         Session session = SessionUtil.getSession();
         Transaction tx = session.beginTransaction();
         //Query to delete the photo based on the id passed.
-        String hql = "delete from photos where id = :id";
+        String hql = "delete from Photos where id = :id";
         Query query = session.createQuery(hql);
         query.setInteger("id",id);
         int rowCount = query.executeUpdate();
@@ -130,14 +137,14 @@ public class PhotosDAO {
 			
 			for (int i=0;i<jsonArray.length();i++){
 				JSONObject obj = jsonArray.getJSONObject(i);
-				System.out.println("THE OBJECT IN THIS RUN IS: \n" + obj);
 				int id_get = obj.getInt("id");
-				System.out.println("THE ID FOUND IS : \n" + id_get);
+				
 				String str_get = obj.getString("title");
-				System.out.println("THE ID FOUND IS : \n" + id_get);
+				
 				String url_get = obj.getString("url");
+				String thumbnailUrl = obj.getString("thumbnailUrl");
 				int album_id_get = obj.getInt("albumId");
-				insertIntoDB(id_get,str_get,url_get,album_id_get);
+				insertIntoDB(id_get,str_get,url_get,album_id_get,thumbnailUrl);
 			}
 		
 
@@ -158,7 +165,7 @@ public class PhotosDAO {
 	}
 	
 	//Insert the photos data into the database. This will be then used to do the rest calls. 
-	private int insertIntoDB(int id,String title, String url, int album_id)
+	private int insertIntoDB(int id,String title, String url, int album_id, String thumbnailUrl)
 	{
 		Session session = SessionUtil.getSession();
 		Transaction tx = session.beginTransaction();
@@ -167,6 +174,7 @@ public class PhotosDAO {
 		photo.setTitle(title);
 		photo.setUrl(url);
 		photo.setAlbumID(album_id);
+		photo.setThumbnailUrl(thumbnailUrl);
 		Integer ret_id = (Integer) session.save(photo);
         tx.commit();
         session.close();

@@ -1,4 +1,7 @@
-
+/**
+ * @author ashah8
+ *
+ */
 package com.achal.dao;
  
 import javax.persistence.Column;
@@ -6,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 //Table Definition with the Getters and Setters.
 @Entity
+@Table(name = "albums")
 public class Albums {
  
     @Id
@@ -18,6 +23,17 @@ public class Albums {
     
     @Column
     private String title;
+    
+    @Column
+    private int userID;
+
+	public int getUserID() {
+		return userID;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
 
 	public int getId() {
 		return id;

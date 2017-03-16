@@ -1,4 +1,7 @@
-
+/**
+ * @author ashah8
+ *
+ */
 package com.achal;
 
 import javax.ws.rs.GET;
@@ -19,10 +22,12 @@ public class DataInit {
     @Produces("application/json")
     public String getAlbumsHttp() throws Exception {
     	AlbumDAO album_dao = new AlbumDAO();
-		String albums = album_dao.getAlbumsHttp();
+    	//Make the call to get the albums data and insert into albums table.
+		album_dao.getAlbumsHttp();
 		PhotosDAO photo_dao = new PhotosDAO();
-		String photo = photo_dao.getPhotosHttp();
-		String str = "GOT DONE WITH INIT. THE DATA IS INTO THE DB NOW.";
+		//Make the call to get the photos data and insert into photos table.
+		photo_dao.getPhotosHttp();
+		String str = "Done with the Init. The data is now in the db. Please use the back button to go back to the Homepage and issue commands from there or you can just use a RESTClient to perform REST calls.";
 		
 		return str;
     }

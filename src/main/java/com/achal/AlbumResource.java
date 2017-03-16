@@ -1,4 +1,7 @@
-
+/**
+ * @author ashah8
+ *
+ */
 package com.achal;
  
 import java.util.List;
@@ -19,6 +22,7 @@ import com.achal.dao.AlbumDAO;
 import com.achal.dao.Albums;
 
 //This is the main path for all the albums related calls.
+
 @Path("/albums")
 public class AlbumResource {
 	
@@ -48,7 +52,7 @@ public class AlbumResource {
     // POST(Create) call to create new Albums. Please provide a body with this. for e.g.
     // URL : http://localhost:8080/Photo_Album_Manager/webapi/albums/create
     // VERB : POST
-    // {"title":"NewAlbumTitle"}
+    // {"title":"NewAlbumTitle","userID":"1"}
     @POST
     @Path("/create")
     @Consumes("application/json")
@@ -63,13 +67,14 @@ public class AlbumResource {
     // PUT(Update) call to update an already existing album. Provide the album id as a parameter.
     // URL : http://localhost:8080/Photo_Album_Manager/webapi/albums/update/1
     // VERB : PUT
-    // Body : {"title":"NewAlbumName"}
+    // Body : {"title":"NewAlbumName","userID":"1"}
     @PUT
     @Path("/update/{id}")
     @Consumes("application/json")
     public Response updateAlbums(@PathParam("id") int id, Albums albums_value){
     	AlbumDAO dao = new AlbumDAO();
-    	int count = dao.updateAlbums(id, albums_value.getTitle());
+    	String title = albums_value.getTitle();
+    	int count = dao.updateAlbums(id, title);
     	if(count==0){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

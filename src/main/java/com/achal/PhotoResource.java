@@ -1,4 +1,7 @@
-
+/**
+ * @author ashah8
+ *
+ */
 package com.achal;
  
 import java.util.List;
@@ -46,7 +49,7 @@ public class PhotoResource {
     // POST(Create) call to create a new photo. Provide the title,url and the album id associated with the photo. 
  	//URL : http://localhost:8080/Photo_Album_Manager/webapi/photos/create
  	// VERB : POST
-    // BODY : {"title":"NewAlbumTitle", "url":"newurl","albumID":"1"}
+    // BODY : {"title":"NewAlbumTitle", "url":"newurl","albumID":"1","thumbnailUrl","http://placehold.it/150/92c952"}
     @POST
     @Path("/create")
     @Consumes("application/json")
@@ -55,14 +58,14 @@ public class PhotoResource {
         photo.setUrl(photo.getUrl());
         photo.setAlbumID(photo.getAlbumID());
         PhotosDAO dao = new PhotosDAO();
-        dao.addPhoto(photo);
-        return Response.ok().build();
+        String retTitle = dao.addPhoto(photo);
+        return Response.ok("New photo has been created with these: " + retTitle).build();
     }
     
     // PUT(Update) call to update an already existing photo. Provide the photo id as a parameter.
     // URL : http://localhost:8080/Photo_Album_Manager/webapi/photos/update/1
     // VERB : PUT
-    // Body : {"title":"NewAlbumTitle", "url":"newurl","albumID":"1"}
+    // Body : {"title":"NewAlbumTitle", "url":"newurl","albumID":"1","thumbnailUrl","http://placehold.it/150/92c952"}
     @PUT
     @Path("/update/{id}")
     @Consumes("application/json")

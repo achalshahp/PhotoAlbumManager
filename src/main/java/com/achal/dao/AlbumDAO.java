@@ -1,3 +1,7 @@
+/**
+ * @author ashah8
+ *
+ */
 package com.achal.dao;
  
 import java.io.BufferedReader;
@@ -33,6 +37,7 @@ public class AlbumDAO {
 	private String addAlbum(Session session, Albums bean){
     	Albums album = new Albums();
         album.setTitle(bean.getTitle());
+        album.setUserID(bean.getUserID());
         session.save(album);
         return bean.getTitle();
     }
@@ -76,7 +81,7 @@ public class AlbumDAO {
         return rowCount;
     }
     
-    public int updateAlbums(int id, String string){
+    public int updateAlbums(int id, String title){
          if(id <=0)  
                return 0;
          Session session = SessionUtil.getSession();
@@ -84,8 +89,7 @@ public class AlbumDAO {
          String hql = "update Albums set title = :title where id = :id";
          Query query = session.createQuery(hql);
          query.setInteger("id",id);
-         query.setString("title",string);
-         System.out.println("THE TITLE PASSED IS : " + string);
+         query.setString("title",title);
          int rowCount = query.executeUpdate();
          System.out.println("Rows affected: " + rowCount);
          tx.commit();
@@ -127,7 +131,8 @@ public class AlbumDAO {
 				JSONObject obj = jsonArray.getJSONObject(i);
 				int id_get = obj.getInt("id");
 				String str_get = obj.getString("title");
-				insertIntoDB(id_get,str_get);
+				int userID_get = obj.getInt("userId");
+				insertIntoDB(id_get,str_get,userID_get);
 			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -145,13 +150,14 @@ public class AlbumDAO {
 	}
 	
 	//Insert the album data into the database. This will be then used to do the rest calls. 
-	private int insertIntoDB(int id,String title)
+	private int insertIntoDB(int id,String title, int userID)
 	{
 		Session session = SessionUtil.getSession();
 		Transaction tx = session.beginTransaction();
 		Albums album = new Albums();
 		album.setId(id);
 		album.setTitle(title);
+		album.setUserID(userID);
 		Integer ret_id = (Integer) session.save(album);
         tx.commit();
         session.close();
