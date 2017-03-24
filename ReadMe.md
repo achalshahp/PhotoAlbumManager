@@ -13,7 +13,7 @@ This project is built using Java/Hibernate, which makes it very easy to get runn
 The relevant endpoints for this application are '/webapi/init', '/webapi/albums',' /webapi/photos'. Both the albums and photos endpoints have the basic CRUD actions. For example, to view all photos, you can navigate to:
 
 
-http://localhost:8080/webapi/photos
+http://localhost:8080/webapi/albums
 
 Which should return the JSON in the following format:
 
