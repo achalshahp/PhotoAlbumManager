@@ -17,6 +17,7 @@ http://localhost:8080/webapi/photos
 
 Which should return the JSON in the following format:
 
+```
 [
   {
     "albumID": 1,
