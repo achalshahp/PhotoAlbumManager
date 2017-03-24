@@ -8,7 +8,7 @@ To run this application you will first need to install a couple packages: jdk 1.
 
 you can install maven by downloading it from the maven website and extractiong it. Please follow this link : https://www.mkyong.com/maven/install-maven-on-mac-osx/
 
-This project is built using Java/Hibernate, which makes it very easy to get running. The Java web application can be deployed locally by downloading the zip and right clicking on the project and choosing the “Run As->Run on Server” option in an IDE. You can deploy the application on any native server that supports Tomcat by copying the WAR file (Right click on the project and choose Export as WAR File option) to appropriate tomcat directory and restarting the tomcat server.
+This project is built using Java/Hibernate, which makes it very easy to get running. The Java web application can be deployed locally by downloading the zip and right clicking on the project and choosing the “Run As->Run on Server” option in an IDE. You can deploy the application on any native server that supports Tomcat by copying the WAR file (Right click on the project and choose Export as WAR File option) to appropriate tomcat directory and restarting the tomcat server.Alternatively, you can download the zip from the GitHub repo and use Eclipse to run it on the Tomcat server
 
 The relevant endpoints for this application are '/webapi/init', '/webapi/albums',' /webapi/photos'. Both the albums and photos endpoints have the basic CRUD actions. For example, to view all photos, you can navigate to:
 
